@@ -84,10 +84,13 @@ public class BoardMaker : MonoBehaviour
 
     void PlaceBall()
     {
-        int ballPositionX = Random.Range(0, 6);
-        int ballPositionZ = Random.Range(1, 1);
-
+        int ballPositionX = 2;
+        int ballPositionZ = 1;
+        
         Vector3 position = new Vector3(ballPositionX, 0.6f, ballPositionZ);
+        
         Instantiate(ball, position, Quaternion.identity);
+
+        
     }
 }
