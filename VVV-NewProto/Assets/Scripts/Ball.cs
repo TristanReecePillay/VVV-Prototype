@@ -6,6 +6,9 @@ public class Ball : MonoBehaviour
 {
     private GameObject owner;
 
+    private Player ballOwner;
+
+
     public void SetOwner(GameObject player)
     {
         owner = player;
@@ -25,5 +28,24 @@ public class Ball : MonoBehaviour
     void Update()
     {
         
+    }
+    public void SetBallOwner(Player player)
+    {
+        ballOwner = player;
+    }
+
+    public bool HasBallOwner()
+    {
+        return ballOwner != null;
+    }
+
+    public Player GetBallOwner()
+    {
+        return ballOwner;
+    }
+
+    public void ClearBallOwner()
+    {
+        ballOwner = null;
     }
 }

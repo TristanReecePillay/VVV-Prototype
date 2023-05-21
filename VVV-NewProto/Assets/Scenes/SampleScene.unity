@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 492614741}
   - component: {fileID: 492614742}
+  - component: {fileID: 492614743}
   m_Layer: 0
   m_Name: Board Manager
   m_TagString: Untagged
@@ -174,6 +175,21 @@ MonoBehaviour:
   player1: {fileID: 5362713842602592366, guid: 40fcc7da7672214489c0b1fbff432c1f, type: 3}
   player2: {fileID: 5685635249678019436, guid: 4ed8d055444e6a34b9ce56bbdb3f5987, type: 3}
   ball: {fileID: 6357831920569144436, guid: 885461c541f9bd24fb9cfda7337ed020, type: 3}
+  numRows: 10
+  numColumns: 7
+  ballInstance: {fileID: 6357831920569144436, guid: 885461c541f9bd24fb9cfda7337ed020, type: 3}
+--- !u!114 &492614743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492614740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc194a63f1fac8e409eeeb9bdfe1f6c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   numRows: 10
   numColumns: 7
 --- !u!1 &705507993
@@ -347,7 +363,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 3.46, y: 9.35, z: 4.59}
+  m_LocalPosition: {x: 3.46, y: 9.35, z: 4.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
