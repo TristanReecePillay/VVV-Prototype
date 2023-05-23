@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 902612949666522720}
   - component: {fileID: 3557242117528687031}
   - component: {fileID: 7494720558227676412}
+  - component: {fileID: 2233084120750614176}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Player1
+  m_TagString: Player2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,6 +99,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2233084120750614176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410752786330251507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 406f351a5b5ead14f8dca94f0ee1118e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 1
 --- !u!1 &5685635249678019436
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,7 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3836893245488711564}
   - component: {fileID: 5739785858783843932}
-  - component: {fileID: 5316963015144296448}
+  - component: {fileID: 6246905926712378211}
   m_Layer: 0
   m_Name: Player2-RedPlayer
   m_TagString: Player2
@@ -145,8 +159,8 @@ CapsuleCollider:
   m_Radius: 0.17587356
   m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: -0.0033762902}
---- !u!114 &5316963015144296448
+  m_Center: {x: 0, y: 0.4, z: -0.0033762902}
+--- !u!114 &6246905926712378211
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -91,26 +91,44 @@ public class Player : MonoBehaviour
 
     void Move(Vector3 targetPosition)
     {
+        //if (hasBall)
+        //{
+        //    float distance = Vector3.Distance(transform.position, targetPosition);
+        //    if (distance > 1f)
+        //    {
+        //        // Target position is not valid, it's not adjacent
+        //        return;
+        //    }
+        //    ball.transform.position = targetPosition;
+        //}
+        //else
+        //{
+        //    // Perform movement logic for the player without the ball
+        //    float distance = Vector3.Distance(transform.position, targetPosition);
+        //    if (distance > 1f)
+        //    {
+        //        // Target position is not valid, it's not adjacent
+        //        return;
+        //    }
+        //}
+
+        float distance = Vector3.Distance(transform.position, targetPosition);
+
+        if (distance > 1f)
+        {
+            // Target position is not valid, it's not adjacent
+            return;
+        }
+
         if (hasBall)
         {
-            float distance = Vector3.Distance(transform.position, targetPosition);
-            if (distance > 1f)
-            {
-                // Target position is not valid, it's not adjacent
-                return;
-            }
+            // Move the ball to the target position
             ball.transform.position = targetPosition;
         }
-        else
-        {
-            // Perform movement logic for the player without the ball
-            float distance = Vector3.Distance(transform.position, targetPosition);
-            if (distance > 1f)
-            {
-                // Target position is not valid, it's not adjacent
-                return;
-            }
-        }
+
+        // Set the target position for the player
+        this.targetPosition = targetPosition;
+        isMoving = true;
     }
 
     public bool HasBall()

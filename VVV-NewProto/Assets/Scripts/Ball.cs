@@ -4,34 +4,40 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    private GameObject owner;
+    public BoardMaker boardMaker;
+    
 
-    private Player ballOwner;
+    public GameObject ballOwner;
 
 
     public void SetOwner(GameObject player)
     {
-        owner = player;
+        ballOwner = player;
+        
     }
 
     public GameObject GetOwner()
     {
-        return owner;
+        return ballOwner;
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        boardMaker = GameObject.Find("BoardMaker").GetComponent<BoardMaker>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+       
+        if (ballOwner != null ) 
+        {
+           transform.position = ballOwner.transform.position + new Vector3(0f, 0.6f, 0f);
+        }
     }
     public void SetBallOwner(Player player)
     {
-        ballOwner = owner;
+        //ballOwner = player;
     }
 
     public bool HasBallOwner()
@@ -39,13 +45,21 @@ public class Ball : MonoBehaviour
         return ballOwner != null;
     }
 
-    public Player GetBallOwner()
-    {
-        return ballOwner;
-    }
+    //public Player GetBallOwner()
+   // {
+       // return ballOwner;
+    //}
 
     public void ClearBallOwner()
     {
         ballOwner = null;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player1"))
+        {
+            ballOwner = other.gameObject;
+        }
     }
 }

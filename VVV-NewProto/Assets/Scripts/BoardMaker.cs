@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
@@ -23,14 +24,17 @@ public class BoardMaker : MonoBehaviour
     private GameObject ballOwner;
 
     private GameObject currentPlayer;
+
+    public GameObject clickedPlayer;
+    public GameObject clickedGround;
     private int movesRemaining;
 
     // Start is called before the first frame update
     void Start()
     {
         CreateField();
-         PlaceBall();
-
+        clickedPlayer = null;
+        clickedGround = null;  
         currentPlayer = player1;   
         movesRemaining = 2;
     }
@@ -38,35 +42,59 @@ public class BoardMaker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
+            Debug.Log("4");
 
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit) && clickedGround == null)
             {
                 GameObject selectedObject = hit.collider.gameObject;
-
+                Debug.Log("3");
                 // Check if the selected object is a player belonging to the current player
-                if (selectedObject.CompareTag("Player") && selectedObject.GetComponent<Player>().Owner == currentPlayer)
+                if (selectedObject.CompareTag("Player1") || selectedObject.CompareTag("Player2"))
                 {
-                    // Check if there are moves remaining for the current player
-                    if (movesRemaining > 0)
-                    {
-                        // Move the selected player to the clicked position
-                        Vector3 newPosition = hit.point;
-                        selectedObject.transform.position = new Vector3(newPosition.x, selectedObject.transform.position.y, newPosition.z);
+                    Debug.Log("2");
+                    clickedPlayer = selectedObject;
+                    Debug.Log(clickedPlayer.name);
 
-                        // Update moves remaining and switch players if no moves remaining
-                        movesRemaining--;
-                        if (movesRemaining == 0)
-                        {
-                            SwitchPlayers();
-                        }
-                    }
+
                 }
             }
+            if (Physics.Raycast(ray, out hit) && clickedPlayer != null)
+            {
+                GameObject selectedFloor = hit.collider.gameObject;
+
+                if (selectedFloor.CompareTag("Ground"))
+                {
+                    clickedGround = selectedFloor;
+                    Debug.Log(clickedGround.name);
+
+                    // Move the selected player to the clicked position
+                }
+
+
+            }
+
+            //clickedPlayer.transform.position = Vector3.MoveTowards(clickedPlayer.transform.position, clickedGround.transform.position, Time.deltaTime * 1f);
+            clickedPlayer.transform.position = clickedGround.transform.position;
+            movesRemaining--;
+            Debug.Log(clickedPlayer.name + clickedGround.name + movesRemaining);
+
+            // Update moves remaining and switch players if no moves remaining
+
+            if (movesRemaining == 0)
+            {
+                SwitchPlayers();
+            }
+            clickedGround = null;
+            clickedPlayer = null;
         }
+
+
+
     }
 
     void CreateField()
@@ -112,13 +140,26 @@ public class BoardMaker : MonoBehaviour
                     player2Instance.GetComponent<Player>().SetOwner(player2Instance);
                 }
             }
-                
-            
+
+            if (currentPlayer == player1)
+            {
+                Vector3 position = new Vector3(2, 0.6f, 1);
+                ballInstance = Instantiate(ball, position, Quaternion.identity);
+            }
+            else if (currentPlayer == player2)
+            {
+                Vector3 position = new Vector3(2, 0.6f, 8);
+                ballInstance = Instantiate(ball, position, Quaternion.identity);
+            }
+
+           
         }
 
-        
+        PlaceBall();
+
     }
 
+    
     void SwitchPlayers()
     {
         if (currentPlayer == player1)
@@ -135,24 +176,34 @@ public class BoardMaker : MonoBehaviour
 
     void PlaceBall()
     {
-        int ballPositionX = 2;
-        int ballPositionZ = 1;
-        
-        Vector3 position = new Vector3(ballPositionX, 0.6f, ballPositionZ);
-        
-        ballInstance = Instantiate(ball, position, Quaternion.identity);
-        ballOwner = player1Instance;
+        Vector3 ballPosition = Vector3.zero;  // Default position if no player is the ball owner
+
+        if (currentPlayer == player1)
+        {
+            ballPosition = new Vector3(2, 0.6f, 1);
+        }
+        else if (currentPlayer == player2)
+        {
+            ballPosition = new Vector3(2, 0.6f, 8);
+        }
+
+        ballInstance = Instantiate(ball, ballPosition, Quaternion.identity);
+        ballOwner = currentPlayer;
 
         ballInstance.GetComponent<Ball>().SetOwner(ballOwner);
+        ballInstance.transform.SetParent(ballOwner.transform);
     }
 
     // Function to handle the movement of the ball
-    void MoveBall(Vector3 targetPosition)
+    public void MoveBall(GameObject targetPlayer)
     {
         if (ballOwner != null)
         {
+            // Calculate the offset between the ball and the target player
+            Vector3 offset = ballInstance.transform.position - ballOwner.transform.position;
+
             // Move the ball to the target position relative to the ball owner
-            ballInstance.transform.position = ballOwner.transform.position + targetPosition;
+            ballInstance.transform.position = targetPlayer.transform.position + offset;
         }
     }
 
@@ -163,7 +214,9 @@ public class BoardMaker : MonoBehaviour
         {
             // Set the target player as the new ball owner
             ballOwner = targetPlayer;
-            ballInstance.transform.SetParent(targetPlayer.transform);
+            ballInstance.GetComponent<Ball>().SetOwner(ballOwner);
+
+            MoveBall(ballOwner);
         }
     }
 }

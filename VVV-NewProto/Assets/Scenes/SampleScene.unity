@@ -177,7 +177,9 @@ MonoBehaviour:
   ball: {fileID: 6357831920569144436, guid: 885461c541f9bd24fb9cfda7337ed020, type: 3}
   numRows: 10
   numColumns: 7
-  ballInstance: {fileID: 6357831920569144436, guid: 885461c541f9bd24fb9cfda7337ed020, type: 3}
+  ballInstance: {fileID: 0}
+  clickedPlayer: {fileID: 0}
+  clickedGround: {fileID: 0}
 --- !u!114 &492614743
 MonoBehaviour:
   m_ObjectHideFlags: 0

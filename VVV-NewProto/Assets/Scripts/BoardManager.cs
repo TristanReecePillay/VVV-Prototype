@@ -11,7 +11,7 @@ public class BoardManager : MonoBehaviour
     private Player player1;
     private Player player2;
 
-    private void Awake()
+    private void Start()
     {
         player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<Player>();
         player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<Player>();

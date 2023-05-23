@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 6914721946241368215}
   - component: {fileID: 580393995265426786}
   - component: {fileID: 3879459836118807221}
-  - component: {fileID: 7821020078444445694}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Player2
+  m_TagString: Player1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84,20 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &7821020078444445694
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87830684947567601}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5362713842602592366
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,7 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3581525960096867470}
   - component: {fileID: 4792120928897984004}
-  - component: {fileID: 932413681339501518}
+  - component: {fileID: 6681478994812120308}
   m_Layer: 0
   m_Name: Player1-BluePlayer
   m_TagString: Player1
@@ -145,8 +130,8 @@ CapsuleCollider:
   m_Radius: 0.1758717
   m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0.000000029802322}
---- !u!114 &932413681339501518
+  m_Center: {x: 0, y: 0.4, z: 0.000000029802322}
+--- !u!114 &6681478994812120308
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
