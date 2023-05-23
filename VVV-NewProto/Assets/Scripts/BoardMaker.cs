@@ -102,14 +102,14 @@ public class BoardMaker : MonoBehaviour
                 {
                     Vector3 position = new Vector3(col, 0.5f, row);
                     GameObject player1Instance = Instantiate(player1, position, Quaternion.identity);
-                    player1Instance.GetComponent<Player>().SetOwner(player1);
+                    player1Instance.GetComponent<Player>().SetOwner(player1Instance);
                 }
 
                 if (row == 8 && col == 0 || row == 8 && col == 2 || row == 8 && col == 4 || row == 8 && col == 6)
                 {
                     Vector3 position = new Vector3(col, 0.5f, row);
                     GameObject player2Instance = Instantiate(player2, position, Quaternion.identity);
-                    player2Instance.GetComponent<Player>().SetOwner(player2);
+                    player2Instance.GetComponent<Player>().SetOwner(player2Instance);
                 }
             }
                 
@@ -141,7 +141,7 @@ public class BoardMaker : MonoBehaviour
         Vector3 position = new Vector3(ballPositionX, 0.6f, ballPositionZ);
         
         ballInstance = Instantiate(ball, position, Quaternion.identity);
-        ballOwner = player1;
+        ballOwner = player1Instance;
 
         ballInstance.GetComponent<Ball>().SetOwner(ballOwner);
     }

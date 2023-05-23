@@ -31,7 +31,7 @@ public class Ball : MonoBehaviour
     }
     public void SetBallOwner(Player player)
     {
-        ballOwner = player;
+        ballOwner = owner;
     }
 
     public bool HasBallOwner()
