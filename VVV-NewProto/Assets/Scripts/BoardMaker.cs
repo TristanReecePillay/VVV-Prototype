@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
-
+public enum TurnState { START, PLAYER1TURN, PLAYER2TURN, WIN, LOSS, DRAW }
 public class BoardMaker : MonoBehaviour
 {
     public GameObject plainGrass;
@@ -29,10 +29,16 @@ public class BoardMaker : MonoBehaviour
     public GameObject clickedGround;
     private int movesRemaining;
 
+    TurnState turnState;
+    
+
     // Start is called before the first frame update
     void Start()
     {
+        //turnState = TurnState.START; 
+
         CreateField();
+        
         clickedPlayer = null;
         clickedGround = null;  
         currentPlayer = player1;   
@@ -58,6 +64,7 @@ public class BoardMaker : MonoBehaviour
                 {
                     Debug.Log("2");
                     clickedPlayer = selectedObject;
+
                     Debug.Log(clickedPlayer.name);
 
 
@@ -74,8 +81,6 @@ public class BoardMaker : MonoBehaviour
 
                     // Move the selected player to the clicked position
                 }
-
-
             }
 
             //clickedPlayer.transform.position = Vector3.MoveTowards(clickedPlayer.transform.position, clickedGround.transform.position, Time.deltaTime * 1f);
@@ -83,11 +88,17 @@ public class BoardMaker : MonoBehaviour
             movesRemaining--;
             Debug.Log(clickedPlayer.name + clickedGround.name + movesRemaining);
 
-            // Update moves remaining and switch players if no moves remaining
+            // If the selected player is the ball owner, move the ball as well
+            if (clickedPlayer == ballOwner)
+            {
+                MoveBall(clickedPlayer);
+            }   
+             // Update moves remaining and switch players if no moves remaining
 
             if (movesRemaining == 0)
             {
                 SwitchPlayers();
+                Debug.Log(currentPlayer.name);
             }
             clickedGround = null;
             clickedPlayer = null;
@@ -188,7 +199,7 @@ public class BoardMaker : MonoBehaviour
         }
 
         ballInstance = Instantiate(ball, ballPosition, Quaternion.identity);
-        ballOwner = currentPlayer;
+        ballOwner = player1;
 
         ballInstance.GetComponent<Ball>().SetOwner(ballOwner);
         ballInstance.transform.SetParent(ballOwner.transform);

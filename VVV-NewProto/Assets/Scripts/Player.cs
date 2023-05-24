@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     public int movementSpeed;
 
     private BoardManager boardManager;
-    private Ball ball;
+    public Ball ball;
 
     private bool hasBall;
     private bool isMoving;
@@ -23,7 +23,8 @@ public class Player : MonoBehaviour
      //Start is called before the first frame update
     void Start()
     {
-        
+        boardManager = FindObjectOfType<BoardManager>();
+        ball = FindObjectOfType<Ball>();
     }
 
     // Update is called once per frame
@@ -40,11 +41,11 @@ public class Player : MonoBehaviour
                 isMoving = false;
 
                 // Check if the target position contains the ball
-                if (targetPosition == ball.transform.position)
+                if (Vector3.Distance(targetPosition, ball.transform.position) < 0.01f)
                 {
                     // Player has reached the ball, acquire it
                     hasBall = true;
-                    ball.SetBallOwner(this);
+                    ball.SetBallOwner(gameObject);
                 }
             }
         }
@@ -91,28 +92,27 @@ public class Player : MonoBehaviour
 
     void Move(Vector3 targetPosition)
     {
-        //if (hasBall)
-        //{
-        //    float distance = Vector3.Distance(transform.position, targetPosition);
-        //    if (distance > 1f)
-        //    {
-        //        // Target position is not valid, it's not adjacent
-        //        return;
-        //    }
-        //    ball.transform.position = targetPosition;
-        //}
-        //else
-        //{
-        //    // Perform movement logic for the player without the ball
-        //    float distance = Vector3.Distance(transform.position, targetPosition);
-        //    if (distance > 1f)
-        //    {
-        //        // Target position is not valid, it's not adjacent
-        //        return;
-        //    }
-        //}
-
         float distance = Vector3.Distance(transform.position, targetPosition);
+
+        if (hasBall)
+        {
+           
+            if (distance > 1f)
+            {
+                // Target position is not valid, it's not adjacent
+                return;
+            }
+            ball.transform.position = targetPosition;
+        }
+        else
+        {
+            // Perform movement logic for the player without the ball
+            if (distance > 1f)
+            {
+                // Target position is not valid, it's not adjacent
+                return;
+            }
+        }
 
         if (distance > 1f)
         {

@@ -32,12 +32,12 @@ public class Ball : MonoBehaviour
        
         if (ballOwner != null ) 
         {
-           transform.position = ballOwner.transform.position + new Vector3(0f, 0.6f, 0f);
+            transform.position = ballOwner.transform.position + new Vector3(2, 0.6f, 1); ; 
         }
     }
-    public void SetBallOwner(Player player)
+    public void SetBallOwner(GameObject player)
     {
-        //ballOwner = player;
+        ballOwner = player;
     }
 
     public bool HasBallOwner()
@@ -45,10 +45,10 @@ public class Ball : MonoBehaviour
         return ballOwner != null;
     }
 
-    //public Player GetBallOwner()
-   // {
-       // return ballOwner;
-    //}
+    public GameObject GetBallOwner()
+    {
+        return ballOwner;
+    }
 
     public void ClearBallOwner()
     {
