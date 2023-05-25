@@ -144,3 +144,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 1
+  ball: {fileID: 0}
+  hasBall: 0
+  isBlue: 1

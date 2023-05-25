@@ -29,6 +29,8 @@ public class BoardMaker : MonoBehaviour
     public GameObject clickedGround;
     private int movesRemaining;
 
+    public Player player;
+
     TurnState turnState;
     
 
@@ -57,6 +59,14 @@ public class BoardMaker : MonoBehaviour
             if (Physics.Raycast(ray, out hit) && clickedGround == null)
             {
                 GameObject selectedObject = hit.collider.gameObject;
+
+                Player player = selectedObject.GetComponent<Player>();
+                if (player != null)
+                {
+                    bool data = player.hasBall;
+
+                    Debug.Log("Selected player Data: " +  data);
+                }
                 
                 // Check if the selected object is a player belonging to the current player
                 if (selectedObject.CompareTag("Player1") || selectedObject.CompareTag("Player2"))
@@ -85,20 +95,13 @@ public class BoardMaker : MonoBehaviour
             Debug.Log(clickedPlayer.name + clickedGround.name + movesRemaining );
 
             // If the selected player is the ball owner, move the ball as well
-            try
-            {
-                if (clickedPlayer == ballOwner)
-                {
-                    MoveBall(clickedPlayer);
-                }
-            }
-            finally
-            {
-               
-            }
-           
-            
-             // Update moves remaining and switch players if no moves remaining
+
+            //if (player.hasBall)
+            //{
+            //    MoveBall(clickedPlayer);
+            //}
+
+            // Update moves remaining and switch players if no moves remaining
 
             if (movesRemaining == 0)
             {
@@ -108,7 +111,6 @@ public class BoardMaker : MonoBehaviour
             clickedGround = null;
             clickedPlayer = null;
         }
-
 
 
     }
@@ -201,14 +203,7 @@ public class BoardMaker : MonoBehaviour
     // Function to handle the movement of the ball
     public void MoveBall(GameObject targetPlayer)
     {
-        if (ballOwner != null)
-        {
-            // Calculate the offset between the ball and the target player
-            Vector3 offset = ballInstance.transform.position - ballOwner.transform.position;
-
-            // Move the ball to the target position relative to the ball owner
-            ballInstance.transform.position = targetPlayer.transform.position + offset;
-        }
+        ball.transform.position = targetPlayer.transform.position;
     }
 
     // Function to handle the passing of the ball

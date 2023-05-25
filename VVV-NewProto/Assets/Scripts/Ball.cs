@@ -32,7 +32,7 @@ public class Ball : MonoBehaviour
        
         if (ballOwner != null ) 
         {
-            transform.position = ballOwner.transform.position + new Vector3(2, 0.6f, 1); ; 
+            transform.position = ballOwner.transform.position + new Vector3(2, 0.6f, 1);
         }
     }
     public void SetBallOwner(GameObject player)

@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     private bool isMoving;
     private Vector3 targetPosition;
 
+    public bool isBlue;
+
 
     public void SetOwner(GameObject owner)
     {
@@ -23,15 +25,17 @@ public class Player : MonoBehaviour
      //Start is called before the first frame update
     void Start()
     {
-
         boardManager = FindObjectOfType<BoardManager>();
         ball = FindObjectOfType<Ball>();
         hasBall = false;
+        
 
         if ( Owner.transform.position == new Vector3(2f, 0.5f, 1f) )
         {
             hasBall = true;
         }
+
+        
     }
 
     // Update is called once per frame
