@@ -53,23 +53,19 @@ public class BoardMaker : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            Debug.Log("4");
 
             if (Physics.Raycast(ray, out hit) && clickedGround == null)
             {
                 GameObject selectedObject = hit.collider.gameObject;
-                Debug.Log("3");
+                
                 // Check if the selected object is a player belonging to the current player
                 if (selectedObject.CompareTag("Player1") || selectedObject.CompareTag("Player2"))
                 {
-                    Debug.Log("2");
                     clickedPlayer = selectedObject;
-
                     Debug.Log(clickedPlayer.name);
-
-
                 }
             }
+
             if (Physics.Raycast(ray, out hit) && clickedPlayer != null)
             {
                 GameObject selectedFloor = hit.collider.gameObject;
@@ -86,13 +82,22 @@ public class BoardMaker : MonoBehaviour
             //clickedPlayer.transform.position = Vector3.MoveTowards(clickedPlayer.transform.position, clickedGround.transform.position, Time.deltaTime * 1f);
             clickedPlayer.transform.position = clickedGround.transform.position;
             movesRemaining--;
-            Debug.Log(clickedPlayer.name + clickedGround.name + movesRemaining);
+            Debug.Log(clickedPlayer.name + clickedGround.name + movesRemaining );
 
             // If the selected player is the ball owner, move the ball as well
-            if (clickedPlayer == ballOwner)
+            try
             {
-                MoveBall(clickedPlayer);
-            }   
+                if (clickedPlayer == ballOwner)
+                {
+                    MoveBall(clickedPlayer);
+                }
+            }
+            finally
+            {
+               
+            }
+           
+            
              // Update moves remaining and switch players if no moves remaining
 
             if (movesRemaining == 0)
@@ -152,18 +157,6 @@ public class BoardMaker : MonoBehaviour
                 }
             }
 
-            if (currentPlayer == player1)
-            {
-                Vector3 position = new Vector3(2, 0.6f, 1);
-                ballInstance = Instantiate(ball, position, Quaternion.identity);
-            }
-            else if (currentPlayer == player2)
-            {
-                Vector3 position = new Vector3(2, 0.6f, 8);
-                ballInstance = Instantiate(ball, position, Quaternion.identity);
-            }
-
-           
         }
 
         PlaceBall();
