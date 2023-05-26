@@ -29,7 +29,11 @@ public class BoardMaker : MonoBehaviour
     public GameObject clickedGround;
     private int movesRemaining;
 
+    
     public Player player;
+
+    public TextMeshProUGUI textRed;
+    public TextMeshProUGUI textBlue;
 
     TurnState turnState;
 
@@ -59,12 +63,21 @@ public class BoardMaker : MonoBehaviour
             if (Physics.Raycast(ray, out hit) && clickedGround == null)
             {
                 GameObject selectedObject = hit.collider.gameObject;
+                
 
                 // Check if the selected object is a player belonging to the current player
                 if (selectedObject.CompareTag("Player1") || selectedObject.CompareTag("Player2"))
                 {
-                    clickedPlayer = selectedObject;
-                    Debug.Log(clickedPlayer.name);
+                    if (selectedObject.GetComponent<Player>().isBlue == currentPlayer.GetComponent<Player>().isBlue) 
+                    {
+                        clickedPlayer = selectedObject;
+                        
+                        Debug.Log(clickedPlayer.name);
+                    }
+                    else
+                    {
+                        Debug.Log("Wrong Player selected");
+                    }
                 }
             }
 
@@ -75,7 +88,8 @@ public class BoardMaker : MonoBehaviour
                 if (selectedFloor.CompareTag("Ground"))
                 {
                     clickedGround = selectedFloor;
-                    Debug.Log(clickedGround.name);
+                    movesRemaining--;
+                    Debug.Log("Player currently on: " + clickedGround.name + "Number of moves reamining: " + movesRemaining);
 
                     // Move the selected player to the clicked position
                 }
@@ -89,12 +103,12 @@ public class BoardMaker : MonoBehaviour
 
             //clickedPlayer.transform.position = Vector3.MoveTowards(clickedPlayer.transform.position, clickedGround.transform.position, Time.deltaTime * 1f);
             clickedPlayer.transform.position = clickedGround.transform.position;
-            movesRemaining--;
+            
             Debug.Log(clickedPlayer.name + clickedGround.name + movesRemaining);
 
             // If the selected player is the ball owner, move the ball as well
+               Player player = clickedPlayer.GetComponent<Player>();
 
-            Player player = clickedPlayer.GetComponent<Player>();
             Debug.Log("Player at " + player.transform.position + " has ball : " + player.hasBall);
             if (player.hasBall)
             {
@@ -102,7 +116,6 @@ public class BoardMaker : MonoBehaviour
             }
 
             // Update moves remaining and switch players if no moves remaining
-
             if (movesRemaining == 0)
             {
                 SwitchPlayers();
@@ -160,7 +173,7 @@ public class BoardMaker : MonoBehaviour
         }
 
         PlaceBall();
-        Debug.Log("Ball is at: " + ball.name);
+        
     }
 
 
@@ -174,6 +187,9 @@ public class BoardMaker : MonoBehaviour
         {
             currentPlayer = player1;
         }
+
+        textRed.enabled = !textRed.IsActive();
+        textBlue.enabled = !textBlue.IsActive();
 
         movesRemaining = 2;  // Reset the number of moves remaining for the new current player
     }

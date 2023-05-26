@@ -24,16 +24,14 @@ public class Ball : MonoBehaviour
     void Start()
     {
         boardMaker = GameObject.Find("BoardMaker").GetComponent<BoardMaker>();
+        transform.position = new Vector3(2, 0.5f, 1);
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (ballOwner != null)
-        {
-            transform.position = ballOwner.transform.position + new Vector3(2, 0.6f, 1);
-        }
+       
     }
     public void SetBallOwner(GameObject player)
     {
