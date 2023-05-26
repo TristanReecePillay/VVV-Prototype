@@ -18,24 +18,20 @@ public class Player : MonoBehaviour
     public bool isBlue;
 
 
-    public void SetOwner(GameObject owner)
-    {
-        Owner = owner;
-    }
-     //Start is called before the first frame update
+    //Start is called before the first frame update
     void Start()
     {
         boardManager = FindObjectOfType<BoardManager>();
         ball = FindObjectOfType<Ball>();
         hasBall = false;
-        
 
-        if ( Owner.transform.position == new Vector3(2f, 0.5f, 1f) )
+
+        if (Vector3.Distance(transform.position, new Vector3(2f, 0.5f, 1f)) < 0.5f)
         {
+            Debug.Log("Player with ball at: " + transform.position);
             hasBall = true;
         }
 
-        
     }
 
     // Update is called once per frame
@@ -107,7 +103,7 @@ public class Player : MonoBehaviour
 
         if (hasBall)
         {
-           
+
             if (distance > 1f)
             {
                 // Target position is not valid, it's not adjacent

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     public BoardMaker boardMaker;
-    
+
 
     public GameObject ballOwner;
 
@@ -13,7 +13,7 @@ public class Ball : MonoBehaviour
     public void SetOwner(GameObject player)
     {
         ballOwner = player;
-        
+
     }
 
     public GameObject GetOwner()
@@ -29,8 +29,8 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
-        if (ballOwner != null ) 
+
+        if (ballOwner != null)
         {
             transform.position = ballOwner.transform.position + new Vector3(2, 0.6f, 1);
         }
