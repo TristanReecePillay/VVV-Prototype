@@ -160,7 +160,7 @@ public class BoardMaker : MonoBehaviour
         }
 
         PlaceBall();
-
+        Debug.Log("Ball is at: " + ball.name);
     }
 
 
