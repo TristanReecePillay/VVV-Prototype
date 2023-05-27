@@ -788,7 +788,8 @@ MonoBehaviour:
   plainGrass: {fileID: 1888999260927226348, guid: 1e36222ab3525474ba957506317c7224, type: 3}
   halfwayUpGrass: {fileID: 3157790377704000644, guid: ed431883168ca7c43b083a5be66996b7, type: 3}
   halfwayDownGrass: {fileID: 9131827311950801943, guid: 3ad68a87963949842bba073414938191, type: 3}
-  trylineGrass: {fileID: 5817295063112175288, guid: a4f40a8cdd7a6f04f97aaf726d53706b, type: 3}
+  trylineRed: {fileID: 5817295063112175288, guid: a4f40a8cdd7a6f04f97aaf726d53706b, type: 3}
+  trylineBlue: {fileID: 5817295063112175288, guid: 9f276f2358fb9ea47b2e730e38a7b2db, type: 3}
   player1: {fileID: 5362713842602592366, guid: 40fcc7da7672214489c0b1fbff432c1f, type: 3}
   player2: {fileID: 5685635249678019436, guid: 4ed8d055444e6a34b9ce56bbdb3f5987, type: 3}
   numRows: 10

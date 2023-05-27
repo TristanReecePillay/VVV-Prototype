@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ae84568fa06886c47890f20f445c0cd0, type: 2}
+  - {fileID: 2100000, guid: 8ddcca8c774467048b76b9d59e0bd16e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -94,8 +94,8 @@ GameObject:
   - component: {fileID: 5817295061545222376}
   - component: {fileID: 2520922262567583270}
   m_Layer: 0
-  m_Name: trylineGrass
-  m_TagString: Finish
+  m_Name: trylineBlue
+  m_TagString: FinishBlue
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

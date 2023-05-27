@@ -7,6 +7,8 @@ TagManager:
   - Player1
   - Player2
   - Ground
+  - FinishBlue
+  - FinishRed
   layers:
   - Default
   - TransparentFX

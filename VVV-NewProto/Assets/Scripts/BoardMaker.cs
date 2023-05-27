@@ -10,7 +10,8 @@ public class BoardMaker : MonoBehaviour
     public GameObject plainGrass;
     public GameObject halfwayUpGrass;
     public GameObject halfwayDownGrass;
-    public GameObject trylineGrass;
+    public GameObject trylineRed;
+    public GameObject trylineBlue;
 
     public GameObject player1;
     public GameObject player2;
@@ -35,6 +36,9 @@ public class BoardMaker : MonoBehaviour
     public TextMeshProUGUI textRed;
     public TextMeshProUGUI textBlue;
 
+    private float blockDist;
+
+    
     TurnState turnState;
 
 
@@ -44,7 +48,7 @@ public class BoardMaker : MonoBehaviour
         //turnState = TurnState.START; 
 
         CreateField();
-
+        blockDist = Vector3.Distance(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
         clickedPlayer = null;
         clickedGround = null;
         currentPlayer = player1;
@@ -55,7 +59,7 @@ public class BoardMaker : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)) 
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -63,15 +67,15 @@ public class BoardMaker : MonoBehaviour
             if (Physics.Raycast(ray, out hit) && clickedGround == null)
             {
                 GameObject selectedObject = hit.collider.gameObject;
-                
+
 
                 // Check if the selected object is a player belonging to the current player
                 if (selectedObject.CompareTag("Player1") || selectedObject.CompareTag("Player2"))
                 {
-                    if (selectedObject.GetComponent<Player>().isBlue == currentPlayer.GetComponent<Player>().isBlue) 
+                    if (selectedObject.GetComponent<Player>().isBlue == currentPlayer.GetComponent<Player>().isBlue)
                     {
                         clickedPlayer = selectedObject;
-                        
+                        player = clickedPlayer.GetComponent<Player>();
                         Debug.Log(clickedPlayer.name);
                     }
                     else
@@ -85,13 +89,25 @@ public class BoardMaker : MonoBehaviour
             {
                 GameObject selectedFloor = hit.collider.gameObject;
 
-                if (selectedFloor.CompareTag("Ground"))
+                if (selectedFloor.CompareTag("Ground") || selectedFloor.CompareTag("FinishBlue") || selectedFloor.CompareTag("FinishRed"))
                 {
-                    clickedGround = selectedFloor;
-                    movesRemaining--;
-                    Debug.Log("Player currently on: " + clickedGround.name + "Number of moves reamining: " + movesRemaining);
+                    float dist = Vector3.Distance(clickedPlayer.transform.position, selectedFloor.transform.position);
+                    if (dist == blockDist)
+                    {
+                        clickedGround = selectedFloor;
+                        movesRemaining--;
+                        Debug.Log("Player currently on: " + clickedGround.name + "Number of moves reamining: " + movesRemaining);
+                        // Move the selected player to the clicked position
+                        if (player.hasBall && ((player.isBlue && selectedFloor.CompareTag("FinishBlue")) || (!player.isBlue && selectedFloor.CompareTag("FinishRed"))))
+                        {
+                            Debug.Log("YOU SCORED!!!");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Block is to far ");
+                    }
 
-                    // Move the selected player to the clicked position
                 }
             }
 
@@ -107,7 +123,7 @@ public class BoardMaker : MonoBehaviour
             Debug.Log(clickedPlayer.name + clickedGround.name + movesRemaining);
 
             // If the selected player is the ball owner, move the ball as well
-               Player player = clickedPlayer.GetComponent<Player>();
+               
 
             Debug.Log("Player at " + player.transform.position + " has ball : " + player.hasBall);
             if (player.hasBall)
@@ -134,11 +150,17 @@ public class BoardMaker : MonoBehaviour
         {
             for (int col = 0; col < numColumns; col++)
             {
-                if (row == 0 || row == 9)
+                if (row == 0)
                 {
                     Vector3 position = new Vector3(col, 0.5f, row);
-                    Instantiate(trylineGrass, position, Quaternion.identity);
+                    Instantiate(trylineRed, position, Quaternion.identity);
                 }
+                else if (row == 9)
+                {
+                    Vector3 position = new Vector3(col, 0.5f, row);
+                    Instantiate(trylineBlue, position, Quaternion.identity);
+                }
+
                 else if (row == 4)
                 {
                     Vector3 position = new Vector3(col, 0.5f, row);
