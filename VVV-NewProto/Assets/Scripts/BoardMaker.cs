@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
@@ -28,10 +29,17 @@ public class BoardMaker : MonoBehaviour
 
     public GameObject clickedPlayer;
     public GameObject clickedGround;
+
+    GameObject[] bluePlayers;
+    GameObject[] redPlayers;
     private int movesRemaining;
 
     
     public Player player;
+
+    public Player tackledPlayer;
+
+    private Vector3 oblivion = new Vector3(100, 100, 100);
 
     public TextMeshProUGUI textRed;
     public TextMeshProUGUI textBlue;
@@ -39,6 +47,7 @@ public class BoardMaker : MonoBehaviour
     public TextMeshProUGUI textInvalidPlayer;
 
     private float blockDist;
+    private float diagonalBlockDist;
 
     
     TurnState turnState;
@@ -51,6 +60,11 @@ public class BoardMaker : MonoBehaviour
 
         CreateField();
         blockDist = Vector3.Distance(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+        diagonalBlockDist = Vector3.Distance(new Vector3(0, 0, 0), new Vector3(1, 0, 1));
+
+        bluePlayers = GameObject.FindGameObjectsWithTag("Player1");
+        redPlayers = GameObject.FindGameObjectsWithTag("Player2");
+
         clickedPlayer = null;
         clickedGround = null;
         currentPlayer = player1;
@@ -92,26 +106,111 @@ public class BoardMaker : MonoBehaviour
             {
                 GameObject selectedFloor = hit.collider.gameObject;
 
+                bool isOccupied = false;
+
+               
+
                 if (selectedFloor.CompareTag("Ground") || selectedFloor.CompareTag("FinishBlue") || selectedFloor.CompareTag("FinishRed"))
                 {
                     float dist = Vector3.Distance(clickedPlayer.transform.position, selectedFloor.transform.position);
-                    if (dist == blockDist)
-                    {
-                        clickedGround = selectedFloor;
-                        movesRemaining--;
-                        Debug.Log("Player currently on: " + clickedGround.name + "Number of moves reamining: " + movesRemaining);
-                        // Move the selected player to the clicked position
-                        if (player.hasBall && ((player.isBlue && selectedFloor.CompareTag("FinishBlue")) || (!player.isBlue && selectedFloor.CompareTag("FinishRed"))))
+                  
+                        if ((dist == blockDist) || ((dist == diagonalBlockDist) && (movesRemaining == 2)))
                         {
-                            Debug.Log("YOU SCORED!!!");
-                        }
-                    }
-                    else
-                    {
-                        textInvalidPlayer.text = "You can't move that far!!";
-                        Debug.Log("Block is to far ");
-                    }
+                            foreach (GameObject obj in bluePlayers)
+                            {
+                                if (obj.transform.position == selectedFloor.transform.position)
+                                {
+                                    tackledPlayer = obj.GetComponent<Player>();
+                                    if (tackledPlayer.hasBall && (tackledPlayer.isBlue != player.isBlue))
+                                    {
+                                        tackledPlayer.hasBall = false;
+                                        obj.transform.position = oblivion;
+                                        player.hasBall = true;
+                                    }
+                                    else
+                                    {
+                                        isOccupied = true;
+                                    }
+                                }
+                            }
 
+                            foreach (GameObject obj in redPlayers)
+                            {
+                                if (obj.transform.position == selectedFloor.transform.position)
+                                {
+                                    tackledPlayer = obj.GetComponent<Player>();
+                                    if (tackledPlayer.hasBall && (tackledPlayer.isBlue != player.isBlue))
+                                    {
+                                        tackledPlayer.hasBall = false;
+                                        obj.transform.position = oblivion;
+                                        player.hasBall = true;
+                                    }
+                                    else
+                                    {
+                                        isOccupied = true;
+                                    }
+                                }
+                            }
+                            if (!isOccupied)
+                            {
+                                // Move the selected player to the clicked position
+                                clickedGround = selectedFloor;
+                                movesRemaining--;
+                                if(dist == diagonalBlockDist)
+                                {
+                                   movesRemaining--;
+                                }
+
+                                clickedPlayer.transform.position = clickedGround.transform.position;
+                                Debug.Log(clickedPlayer.name + clickedGround.name + movesRemaining);
+                                Debug.Log("Player currently on: " + clickedGround.name + "Number of moves reamining: " + movesRemaining);
+
+                                textInvalidPlayer.text = string.Empty;
+
+                                if (player.hasBall && ((player.isBlue && selectedFloor.CompareTag("FinishBlue")) || (!player.isBlue && selectedFloor.CompareTag("FinishRed"))))
+                                {
+                                    int xCoordinate = 0;
+                                    player.hasBall = false;
+                                    foreach (GameObject obj in bluePlayers)
+                                    {
+                                      obj.transform.position = new Vector3(xCoordinate, 0.5f, 1);
+                                        if((xCoordinate == 2) && (!player.isBlue))
+                                        {
+                                            obj.GetComponent<Player>().hasBall = true;
+                                            MoveBall(obj);
+                                        }
+                                      xCoordinate += 2;
+                                    }
+                                     xCoordinate = 0;
+
+                                    foreach (GameObject obj in redPlayers)
+                                    {
+                                        obj.transform.position = new Vector3(xCoordinate, 0.5f, 8);
+                                        if ((xCoordinate == 2) && (player.isBlue))
+                                        {
+                                            obj.GetComponent<Player>().hasBall = true;
+                                            MoveBall(obj);
+                                        }
+                                    
+                                      xCoordinate += 2;
+                                    }
+                                Debug.Log("YOU SCORED!!!");
+                                    textInvalidPlayer.text = "Player has scored";
+                                }
+                            }
+
+                            else
+                            {
+                                    textInvalidPlayer.text = "Space is Occupied!";
+                            }
+
+                        }
+
+                        else
+                        {
+                            textInvalidPlayer.text = "You can't move that far!!";
+
+                        }
                 }
             }
 
@@ -122,9 +221,8 @@ public class BoardMaker : MonoBehaviour
             }
 
             //clickedPlayer.transform.position = Vector3.MoveTowards(clickedPlayer.transform.position, clickedGround.transform.position, Time.deltaTime * 1f);
-            clickedPlayer.transform.position = clickedGround.transform.position;
+
             
-            Debug.Log(clickedPlayer.name + clickedGround.name + movesRemaining);
 
             // If the selected player is the ball owner, move the ball as well
                
@@ -257,5 +355,30 @@ public class BoardMaker : MonoBehaviour
             MoveBall(ballOwner);
         }
     }
+
+    private void CheckOverlap(BoxCollider collider1)
+    {
+        // Get the colliders of all objects in the scene
+        BoxCollider[] colliders2 = FindObjectsOfType<BoxCollider>();
+
+        foreach (BoxCollider collider2 in colliders2)
+        {
+            // Skip checking against the current object's own collider
+            if (collider2 == collider1)
+                continue;
+
+            // Check if the colliders' bounds are overlapping
+            if (collider1.bounds.Intersects(collider2.bounds))
+            {
+                // Perform operations or checks when overlap is detected
+                // Example: Access components or data of the overlapping object
+                Debug.Log("Overlap detected with: " + collider2.gameObject.name);
+            }
+        }
+        return;
+    }
+
+    
+
 }
 
