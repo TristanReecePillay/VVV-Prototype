@@ -36,6 +36,8 @@ public class BoardMaker : MonoBehaviour
     public TextMeshProUGUI textRed;
     public TextMeshProUGUI textBlue;
 
+    public TextMeshProUGUI textInvalidPlayer;
+
     private float blockDist;
 
     
@@ -80,6 +82,7 @@ public class BoardMaker : MonoBehaviour
                     }
                     else
                     {
+                        textInvalidPlayer.text = "You clicked the Wrong Player!!";
                         Debug.Log("Wrong Player selected");
                     }
                 }
@@ -105,6 +108,7 @@ public class BoardMaker : MonoBehaviour
                     }
                     else
                     {
+                        textInvalidPlayer.text = "You can't move that far!!";
                         Debug.Log("Block is to far ");
                     }
 
@@ -140,7 +144,6 @@ public class BoardMaker : MonoBehaviour
             clickedGround = null;
             clickedPlayer = null;
         }
-
 
     }
 
