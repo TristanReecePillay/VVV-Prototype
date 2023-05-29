@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -74,8 +75,34 @@ public class BoardMaker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if ((movesRemaining > 0) && (Input.GetMouseButtonDown(1)))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
 
-        if (Input.GetMouseButtonDown(0)) 
+            if (Physics.Raycast(ray,out hit) && clickedGround == null)
+            {
+                GameObject selectedObject = hit.collider.gameObject;
+
+                // Check if the selected object is a player belonging to the current player
+                if (selectedObject.CompareTag("Player1") || selectedObject.CompareTag("Player2"))
+                {
+                    if (selectedObject.GetComponent<Player>().isBlue == currentPlayer.GetComponent<Player>().isBlue)
+                    {
+                        ballOwner = FindBall(bluePlayers, redPlayers);
+                        if (ballOwner.GetComponent<Player>().isBlue == selectedObject.GetComponent<Player>().isBlue)
+                        {
+                            selectedObject.GetComponent<Player>().hasBall = true;
+                            ballOwner.GetComponent<Player>().hasBall = false;
+                            MoveBall(selectedObject);
+                            movesRemaining--;
+                        }
+                    }
+                }
+            }
+        }
+
+        if ((movesRemaining > 0) && (Input.GetMouseButtonDown(0))) 
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -126,6 +153,12 @@ public class BoardMaker : MonoBehaviour
                                         tackledPlayer.hasBall = false;
                                         obj.transform.position = oblivion;
                                         player.hasBall = true;
+                                        if (AllInOblivion(bluePlayers))
+                                        {
+                                            resetBoard();
+                                        movesRemaining = 0;
+                                            Debug.Log("Red scored!");
+                                        }
                                     }
                                     else
                                     {
@@ -144,7 +177,13 @@ public class BoardMaker : MonoBehaviour
                                         tackledPlayer.hasBall = false;
                                         obj.transform.position = oblivion;
                                         player.hasBall = true;
+                                    if (AllInOblivion(redPlayers))
+                                    {
+                                        resetBoard();
+                                        movesRemaining = 0;
+                                        Debug.Log("Blue scored!");
                                     }
+                                }
                                     else
                                     {
                                         isOccupied = true;
@@ -169,47 +208,23 @@ public class BoardMaker : MonoBehaviour
 
                                 if (player.hasBall && ((player.isBlue && selectedFloor.CompareTag("FinishBlue")) || (!player.isBlue && selectedFloor.CompareTag("FinishRed"))))
                                 {
-                                    int xCoordinate = 0;
-                                    player.hasBall = false;
-                                    foreach (GameObject obj in bluePlayers)
-                                    {
-                                      obj.transform.position = new Vector3(xCoordinate, 0.5f, 1);
-                                        if((xCoordinate == 2) && (!player.isBlue))
-                                        {
-                                            obj.GetComponent<Player>().hasBall = true;
-                                            MoveBall(obj);
-                                        }
-                                      xCoordinate += 2;
-                                    }
-                                     xCoordinate = 0;
-
-                                    foreach (GameObject obj in redPlayers)
-                                    {
-                                        obj.transform.position = new Vector3(xCoordinate, 0.5f, 8);
-                                        if ((xCoordinate == 2) && (player.isBlue))
-                                        {
-                                            obj.GetComponent<Player>().hasBall = true;
-                                            MoveBall(obj);
-                                        }
-                                    
-                                      xCoordinate += 2;
-                                    }
-                                Debug.Log("YOU SCORED!!!");
+                                    resetBoard();
+                                    movesRemaining = 0;
+                                    Debug.Log("YOU SCORED!!!");
                                     textInvalidPlayer.text = "Player has scored";
                                 }
                             }
 
                             else
                             {
-                                    textInvalidPlayer.text = "Space is Occupied!";
+                               textInvalidPlayer.text = "Space is Occupied!";
                             }
 
                         }
 
                         else
                         {
-                            textInvalidPlayer.text = "You can't move that far!!";
-
+                           textInvalidPlayer.text = "You can't move that far!!";
                         }
                 }
             }
@@ -234,14 +249,15 @@ public class BoardMaker : MonoBehaviour
             }
 
             // Update moves remaining and switch players if no moves remaining
-            if (movesRemaining == 0)
-            {
-                SwitchPlayers();
-                Debug.Log(currentPlayer.name);
-            }
             clickedGround = null;
             clickedPlayer = null;
         }
+        if (movesRemaining <= 0)
+        {
+            SwitchPlayers();
+            Debug.Log(currentPlayer.name);
+        }
+        
 
     }
 
@@ -356,28 +372,69 @@ public class BoardMaker : MonoBehaviour
         }
     }
 
-    private void CheckOverlap(BoxCollider collider1)
-    {
-        // Get the colliders of all objects in the scene
-        BoxCollider[] colliders2 = FindObjectsOfType<BoxCollider>();
+   bool AllInOblivion(GameObject[] players)
+   {
+        bool result = true;
 
-        foreach (BoxCollider collider2 in colliders2)
+        foreach (GameObject obj in players)
         {
-            // Skip checking against the current object's own collider
-            if (collider2 == collider1)
-                continue;
-
-            // Check if the colliders' bounds are overlapping
-            if (collider1.bounds.Intersects(collider2.bounds))
+            if(obj.transform.position != oblivion)
             {
-                // Perform operations or checks when overlap is detected
-                // Example: Access components or data of the overlapping object
-                Debug.Log("Overlap detected with: " + collider2.gameObject.name);
+                result = false;
+                break;
             }
         }
-        return;
+
+            return result;
+   }
+
+    void resetBoard()
+    {
+        int xCoordinate = 0;
+        player.hasBall = false;
+        foreach (GameObject obj in bluePlayers)
+        {
+            obj.transform.position = new Vector3(xCoordinate, 0.5f, 1);
+            if ((xCoordinate == 2) && (!player.isBlue))
+            {
+                obj.GetComponent<Player>().hasBall = true;
+                MoveBall(obj);
+            }
+            xCoordinate += 2;
+        }
+        xCoordinate = 0;
+
+        foreach (GameObject obj in redPlayers)
+        {
+            obj.transform.position = new Vector3(xCoordinate, 0.5f, 8);
+            if ((xCoordinate == 2) && (player.isBlue))
+            {
+                obj.GetComponent<Player>().hasBall = true;
+                MoveBall(obj);
+            }
+
+            xCoordinate += 2;
+        }
     }
 
+    GameObject FindBall(GameObject[] bluePlayers, GameObject[] redPlayers)
+    {
+        foreach (GameObject obj in bluePlayers )
+        {
+            if (obj.GetComponent<Player>().hasBall)
+            {
+                return obj;
+            }
+        }
+        foreach (GameObject obj in redPlayers)
+        {
+            if (obj.GetComponent<Player>().hasBall)
+            {
+                return obj;
+            }
+        }
+        return null;
+    }
     
 
 }

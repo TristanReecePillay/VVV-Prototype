@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public Ball ball;
 
     public bool hasBall;
-    private bool isMoving;
+    //private bool isMoving;
     private Vector3 targetPosition;
 
     public bool isBlue;
@@ -37,25 +37,25 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isMoving)
-        {
-            // Move towards the target position
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * movementSpeed);
+        //if (isMoving)
+        //{
+        //    // Move towards the target position
+        //    transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * movementSpeed);
 
-            // Check if the player has reached the target position
-            if (transform.position == targetPosition)
-            {
-                isMoving = false;
+        //    // Check if the player has reached the target position
+        //    if (transform.position == targetPosition)
+        //    {
+        //        isMoving = false;
 
-                // Check if the target position contains the ball
-                if (Vector3.Distance(targetPosition, ball.transform.position) < 0.01f)
-                {
-                    // Player has reached the ball, acquire it
-                    hasBall = true;
-                    ball.SetBallOwner(gameObject);
-                }
-            }
-        }
+        //        // Check if the target position contains the ball
+        //        if (Vector3.Distance(targetPosition, ball.transform.position) < 0.01f)
+        //        {
+        //            // Player has reached the ball, acquire it
+        //            hasBall = true;
+        //            ball.SetBallOwner(gameObject);
+        //        }
+        //    }
+        //}
     }
 
     private void OnMouseDown()
@@ -65,13 +65,13 @@ public class Player : MonoBehaviour
         if (hasBall && boardManager.IsCurrentPlayerTurn(this))
         {
             // Set the target position to the clicked tile
-            targetPosition = GetClickedTilePosition();
+           // targetPosition = GetClickedTilePosition();
 
             // Check if the target position is a valid move
             if (boardManager.IsMoveValid(targetPosition))
             {
                 // Start moving the player towards the target position
-                isMoving = true;
+                //isMoving = true;
                 Move(targetPosition);
             }
         }
@@ -135,7 +135,7 @@ public class Player : MonoBehaviour
 
         // Set the target position for the player
         this.targetPosition = targetPosition;
-        isMoving = true;
+        //isMoving = true;
     }
 
     public bool HasBall()

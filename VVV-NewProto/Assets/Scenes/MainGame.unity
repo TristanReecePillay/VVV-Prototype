@@ -876,6 +876,7 @@ MonoBehaviour:
   clickedPlayer: {fileID: 0}
   clickedGround: {fileID: 0}
   player: {fileID: 0}
+  tackledPlayer: {fileID: 0}
   textRed: {fileID: 901238677}
   textBlue: {fileID: 1598758093}
   textInvalidPlayer: {fileID: 1798282309}
