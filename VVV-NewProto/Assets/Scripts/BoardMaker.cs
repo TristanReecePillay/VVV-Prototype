@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.VersionControl;
 using UnityEngine;
 using static UnityEngine.Rendering.VirtualTexturing.Debugging;
@@ -30,6 +31,9 @@ public class BoardMaker : MonoBehaviour
 
     public GameObject clickedPlayer;
     public GameObject clickedGround;
+
+    private int redScore;
+    private int blueScore;
 
     GameObject[] bluePlayers;
     GameObject[] redPlayers;
@@ -92,10 +96,22 @@ public class BoardMaker : MonoBehaviour
                         ballOwner = FindBall(bluePlayers, redPlayers);
                         if (ballOwner.GetComponent<Player>().isBlue == selectedObject.GetComponent<Player>().isBlue)
                         {
-                            selectedObject.GetComponent<Player>().hasBall = true;
-                            ballOwner.GetComponent<Player>().hasBall = false;
-                            MoveBall(selectedObject);
-                            movesRemaining--;
+                            if ((ballOwner.GetComponent<Player>().isBlue && (ballOwner.transform.position.z >= selectedObject.transform.position.z)) || (!ballOwner.GetComponent<Player>().isBlue && (ballOwner.transform.position.z <= selectedObject.transform.position.z)))
+                            {
+                                selectedObject.GetComponent<Player>().hasBall = true;
+                                ballOwner.GetComponent<Player>().hasBall = false;
+                                MoveBall(selectedObject);
+                                movesRemaining--;
+                            }
+                            else
+                            {
+                                textInvalidPlayer.text = "Thats Offside!!";
+                            }
+                           
+                        }
+                        else
+                        {
+                            textInvalidPlayer.text = "Other team owns the Ball!";
                         }
                     }
                 }
@@ -208,10 +224,19 @@ public class BoardMaker : MonoBehaviour
 
                                 if (player.hasBall && ((player.isBlue && selectedFloor.CompareTag("FinishBlue")) || (!player.isBlue && selectedFloor.CompareTag("FinishRed"))))
                                 {
+                                    if(player.isBlue)
+                                    {
+                                    blueScore++;
+                                        textInvalidPlayer.text = "Blue scored: " + blueScore;
+                                    }
+                                    else
+                                    {
+                                        redScore++;
+                                        textInvalidPlayer.text = "Red scored: " + redScore;
+                                    }
                                     resetBoard();
-                                    movesRemaining = 0;
-                                    Debug.Log("YOU SCORED!!!");
-                                    textInvalidPlayer.text = "Player has scored";
+                                    movesRemaining = 0;                                   
+                                    
                                 }
                             }
 
