@@ -50,9 +50,12 @@ public class BoardMaker : MonoBehaviour
     public TextMeshProUGUI textBlue;
 
     public TextMeshProUGUI textInvalidPlayer;
+    public TextMeshProUGUI textScore;
 
     private float blockDist;
     private float diagonalBlockDist;
+
+    
 
     
     TurnState turnState;
@@ -197,7 +200,7 @@ public class BoardMaker : MonoBehaviour
                                     {
                                         resetBoard();
                                         movesRemaining = 0;
-                                        Debug.Log("Blue scored!");
+                                        
                                     }
                                 }
                                     else
@@ -226,7 +229,8 @@ public class BoardMaker : MonoBehaviour
                                 {
                                     if(player.isBlue)
                                     {
-                                    blueScore++;
+                                        blueScore++;
+                                       
                                         textInvalidPlayer.text = "Blue scored: " + blueScore;
                                     }
                                     else
@@ -282,7 +286,7 @@ public class BoardMaker : MonoBehaviour
             SwitchPlayers();
             Debug.Log(currentPlayer.name);
         }
-        
+        textScore.text = " Blue " + blueScore + " : " + redScore + " Red ";
 
     }
 
