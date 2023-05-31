@@ -55,9 +55,9 @@ public class BoardMaker : MonoBehaviour
     private float blockDist;
     private float diagonalBlockDist;
 
-    
+    bool pvp;
 
-    
+
     TurnState turnState;
 
 
@@ -65,7 +65,7 @@ public class BoardMaker : MonoBehaviour
     void Start()
     {
         //turnState = TurnState.START; 
-
+        pvp = true;
         CreateField();
         blockDist = Vector3.Distance(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
         diagonalBlockDist = Vector3.Distance(new Vector3(0, 0, 0), new Vector3(1, 0, 1));
@@ -82,84 +82,88 @@ public class BoardMaker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((movesRemaining > 0) && (Input.GetMouseButtonDown(1)))
+        if (pvp || (currentPlayer == player1))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
 
-            if (Physics.Raycast(ray,out hit) && clickedGround == null)
+
+            if ((movesRemaining > 0) && (Input.GetMouseButtonDown(1)))
             {
-                GameObject selectedObject = hit.collider.gameObject;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
 
-                // Check if the selected object is a player belonging to the current player
-                if (selectedObject.CompareTag("Player1") || selectedObject.CompareTag("Player2"))
+                if (Physics.Raycast(ray, out hit) && clickedGround == null)
                 {
-                    if (selectedObject.GetComponent<Player>().isBlue == currentPlayer.GetComponent<Player>().isBlue)
+                    GameObject selectedObject = hit.collider.gameObject;
+
+                    // Check if the selected object is a player belonging to the current player
+                    if (selectedObject.CompareTag("Player1") || selectedObject.CompareTag("Player2"))
                     {
-                        ballOwner = FindBall(bluePlayers, redPlayers);
-                        if (ballOwner.GetComponent<Player>().isBlue == selectedObject.GetComponent<Player>().isBlue)
+                        if (selectedObject.GetComponent<Player>().isBlue == currentPlayer.GetComponent<Player>().isBlue)
                         {
-                            if ((ballOwner.GetComponent<Player>().isBlue && (ballOwner.transform.position.z >= selectedObject.transform.position.z)) || (!ballOwner.GetComponent<Player>().isBlue && (ballOwner.transform.position.z <= selectedObject.transform.position.z)))
+                            ballOwner = FindBall(bluePlayers, redPlayers);
+                            if (ballOwner.GetComponent<Player>().isBlue == selectedObject.GetComponent<Player>().isBlue)
                             {
-                                selectedObject.GetComponent<Player>().hasBall = true;
-                                ballOwner.GetComponent<Player>().hasBall = false;
-                                MoveBall(selectedObject);
-                                movesRemaining--;
+                                if ((ballOwner.GetComponent<Player>().isBlue && (ballOwner.transform.position.z >= selectedObject.transform.position.z)) || (!ballOwner.GetComponent<Player>().isBlue && (ballOwner.transform.position.z <= selectedObject.transform.position.z)))
+                                {
+                                    selectedObject.GetComponent<Player>().hasBall = true;
+                                    ballOwner.GetComponent<Player>().hasBall = false;
+                                    MoveBall(selectedObject);
+                                    movesRemaining--;
+                                }
+                                else
+                                {
+                                    textInvalidPlayer.text = "Thats Offside!!";
+                                }
+
                             }
                             else
                             {
-                                textInvalidPlayer.text = "Thats Offside!!";
+                                textInvalidPlayer.text = "Other team owns the Ball!";
                             }
-                           
+                        }
+                    }
+                }
+            }
+
+            if ((movesRemaining > 0) && (Input.GetMouseButtonDown(0)))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit) && clickedGround == null)
+                {
+                    GameObject selectedObject = hit.collider.gameObject;
+
+
+                    // Check if the selected object is a player belonging to the current player
+                    if (selectedObject.CompareTag("Player1") || selectedObject.CompareTag("Player2"))
+                    {
+                        if (selectedObject.GetComponent<Player>().isBlue == currentPlayer.GetComponent<Player>().isBlue)
+                        {
+                            clickedPlayer = selectedObject;
+                            player = clickedPlayer.GetComponent<Player>();
+                            Debug.Log(clickedPlayer.name);
                         }
                         else
                         {
-                            textInvalidPlayer.text = "Other team owns the Ball!";
+                            textInvalidPlayer.text = "You clicked the Wrong Player!!";
+                            Debug.Log("Wrong Player selected");
                         }
                     }
                 }
-            }
-        }
 
-        if ((movesRemaining > 0) && (Input.GetMouseButtonDown(0))) 
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit) && clickedGround == null)
-            {
-                GameObject selectedObject = hit.collider.gameObject;
-
-
-                // Check if the selected object is a player belonging to the current player
-                if (selectedObject.CompareTag("Player1") || selectedObject.CompareTag("Player2"))
+                if (Physics.Raycast(ray, out hit) && clickedPlayer != null)
                 {
-                    if (selectedObject.GetComponent<Player>().isBlue == currentPlayer.GetComponent<Player>().isBlue)
+                    GameObject selectedFloor = hit.collider.gameObject;
+
+                    bool isOccupied = false;
+
+
+
+                    if (selectedFloor.CompareTag("Ground") || selectedFloor.CompareTag("FinishBlue") || selectedFloor.CompareTag("FinishRed"))
                     {
-                        clickedPlayer = selectedObject;
-                        player = clickedPlayer.GetComponent<Player>();
-                        Debug.Log(clickedPlayer.name);
-                    }
-                    else
-                    {
-                        textInvalidPlayer.text = "You clicked the Wrong Player!!";
-                        Debug.Log("Wrong Player selected");
-                    }
-                }
-            }
+                        float dist = Vector3.Distance(clickedPlayer.transform.position, selectedFloor.transform.position);
 
-            if (Physics.Raycast(ray, out hit) && clickedPlayer != null)
-            {
-                GameObject selectedFloor = hit.collider.gameObject;
-
-                bool isOccupied = false;
-
-               
-
-                if (selectedFloor.CompareTag("Ground") || selectedFloor.CompareTag("FinishBlue") || selectedFloor.CompareTag("FinishRed"))
-                {
-                    float dist = Vector3.Distance(clickedPlayer.transform.position, selectedFloor.transform.position);
-                  
                         if ((dist == blockDist) || ((dist == diagonalBlockDist) && (movesRemaining == 2)))
                         {
                             foreach (GameObject obj in bluePlayers)
@@ -175,7 +179,7 @@ public class BoardMaker : MonoBehaviour
                                         if (AllInOblivion(bluePlayers))
                                         {
                                             resetBoard();
-                                        movesRemaining = 0;
+                                            movesRemaining = 0;
                                             Debug.Log("Red scored!");
                                         }
                                     }
@@ -196,13 +200,13 @@ public class BoardMaker : MonoBehaviour
                                         tackledPlayer.hasBall = false;
                                         obj.transform.position = oblivion;
                                         player.hasBall = true;
-                                    if (AllInOblivion(redPlayers))
-                                    {
-                                        resetBoard();
-                                        movesRemaining = 0;
-                                        
+                                        if (AllInOblivion(redPlayers))
+                                        {
+                                            resetBoard();
+                                            movesRemaining = 0;
+
+                                        }
                                     }
-                                }
                                     else
                                     {
                                         isOccupied = true;
@@ -214,9 +218,9 @@ public class BoardMaker : MonoBehaviour
                                 // Move the selected player to the clicked position
                                 clickedGround = selectedFloor;
                                 movesRemaining--;
-                                if(dist == diagonalBlockDist)
+                                if (dist == diagonalBlockDist)
                                 {
-                                   movesRemaining--;
+                                    movesRemaining--;
                                 }
 
                                 clickedPlayer.transform.position = clickedGround.transform.position;
@@ -227,10 +231,10 @@ public class BoardMaker : MonoBehaviour
 
                                 if (player.hasBall && ((player.isBlue && selectedFloor.CompareTag("FinishBlue")) || (!player.isBlue && selectedFloor.CompareTag("FinishRed"))))
                                 {
-                                    if(player.isBlue)
+                                    if (player.isBlue)
                                     {
                                         blueScore++;
-                                       
+
                                         textInvalidPlayer.text = "Blue scored: " + blueScore;
                                     }
                                     else
@@ -239,55 +243,59 @@ public class BoardMaker : MonoBehaviour
                                         textInvalidPlayer.text = "Red scored: " + redScore;
                                     }
                                     resetBoard();
-                                    movesRemaining = 0;                                   
-                                    
+                                    movesRemaining = 0;
+
                                 }
                             }
 
                             else
                             {
-                               textInvalidPlayer.text = "Space is Occupied!";
+                                textInvalidPlayer.text = "Space is Occupied!";
                             }
 
                         }
 
                         else
                         {
-                           textInvalidPlayer.text = "You can't move that far!!";
+                            textInvalidPlayer.text = "You can't move that far!!";
                         }
+                    }
                 }
-            }
 
-            if (clickedPlayer == null || clickedGround == null)
+                if (clickedPlayer == null || clickedGround == null)
+                {
+                    Debug.Log("No move made");
+                    return;
+                }
+
+                //clickedPlayer.transform.position = Vector3.MoveTowards(clickedPlayer.transform.position, clickedGround.transform.position, Time.deltaTime * 1f);
+
+
+
+                // If the selected player is the ball owner, move the ball as well
+
+
+                Debug.Log("Player at " + player.transform.position + " has ball : " + player.hasBall);
+                if (player.hasBall)
+                {
+                    MoveBall(clickedPlayer);
+                }
+
+                // Update moves remaining and switch players if no moves remaining
+                clickedGround = null;
+                clickedPlayer = null;
+            }
+            if (movesRemaining <= 0)
             {
-                Debug.Log("No move made");
-                return;
+                SwitchPlayers();
+                Debug.Log(currentPlayer.name);
             }
-
-            //clickedPlayer.transform.position = Vector3.MoveTowards(clickedPlayer.transform.position, clickedGround.transform.position, Time.deltaTime * 1f);
-
-            
-
-            // If the selected player is the ball owner, move the ball as well
-               
-
-            Debug.Log("Player at " + player.transform.position + " has ball : " + player.hasBall);
-            if (player.hasBall)
-            {
-                MoveBall(clickedPlayer);
-            }
-
-            // Update moves remaining and switch players if no moves remaining
-            clickedGround = null;
-            clickedPlayer = null;
+            textScore.text = " Blue " + blueScore + " : " + redScore + " Red ";
         }
-        if (movesRemaining <= 0)
+        else
         {
-            SwitchPlayers();
-            Debug.Log(currentPlayer.name);
+            aiMakeMove();
         }
-        textScore.text = " Blue " + blueScore + " : " + redScore + " Red ";
-
     }
 
     void CreateField()
@@ -463,6 +471,11 @@ public class BoardMaker : MonoBehaviour
             }
         }
         return null;
+    }
+
+    void aiMakeMove()
+    {
+
     }
     
 
