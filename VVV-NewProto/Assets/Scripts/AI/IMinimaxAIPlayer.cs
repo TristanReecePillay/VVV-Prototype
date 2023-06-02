@@ -13,10 +13,15 @@ namespace AI.Agents
 
         Move bestMove;
 
+        
+
+
+
         public MinimaxAIPlayer(IEvaluator evaluator, int maxDepth = 11)
         {
             this.evaluator = evaluator;
             this.maxDepth = maxDepth;
+           
 
         }
 
@@ -38,12 +43,14 @@ namespace AI.Agents
             List<Move> possibleMoves = rep.GetPossibleMoves(isMaximizing ? 1 : -1);
             List<IRepresentation> possibleReps = new List<IRepresentation>();
 
+            List<int> utilities = new List<int>(possibleMoves.Count); // List of Utility scores
 
             foreach (Move possibleMove in possibleMoves)
             {
                 IRepresentation dupRep = rep.Duplicate();
                 dupRep.MakeMove(possibleMove, isMaximizing ? 1 : -1);
                 possibleReps.Add(dupRep);
+                utilities.Add(evaluator.GetEvaluation(dupRep));
             }
 
             int index = 0;

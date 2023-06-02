@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IRepresentation
 {
-    int[] GetAs1DArray();
+    //int[] GetAs1DArray();
     int[,] GetAs2DArray();
 
     IRepresentation Duplicate();

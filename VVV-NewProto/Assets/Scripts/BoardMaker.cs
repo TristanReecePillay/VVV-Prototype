@@ -1,3 +1,4 @@
+using AI.Agents;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,9 +8,15 @@ using UnityEditor.VersionControl;
 using UnityEngine;
 using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
-public enum TurnState { START, PLAYER1TURN, PLAYER2TURN, WIN, LOSS, DRAW }
+
 public class BoardMaker : MonoBehaviour
 {
+    public IRepresentation representation;
+
+    IAIPlayer aiPlayer = new MinimaxAIPlayer(new VutballUtiliity());
+    public GameOutcome outcome = GameOutcome.UNDETERMINED;
+
+    private int playerTurn;
     public GameObject plainGrass;
     public GameObject halfwayUpGrass;
     public GameObject halfwayDownGrass;
@@ -44,7 +51,7 @@ public class BoardMaker : MonoBehaviour
 
     public Player tackledPlayer;
 
-    private Vector3 oblivion = new Vector3(100, 100, 100);
+    private Vector3 oblivion = new Vector3(100, 100, -100);
 
     public TextMeshProUGUI textRed;
     public TextMeshProUGUI textBlue;
@@ -57,14 +64,39 @@ public class BoardMaker : MonoBehaviour
 
     bool pvp;
 
+    public int[,] boardRepresentation = new int[,] 
+    {
+        { 3, 3, 3, 3, 3, 3, 3 },
+        { 2, 0, 2, 0, 2, 0, 2 },
+        { 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0 },
+        { 1, 0, -1, 0, 1, 0, 1 },
+        { 4, 4, 4, 4, 4,4, 4 }
+    } ; 
 
-    TurnState turnState;
+    // 4 = red goal
+    // 3 = blue goal
+    // 2 = red player piece 
+    // 1 = blue player piece 
+    // 0 = grass block
+    // - = ball 
+
+    //to DO: Everytime you move the player you have to change the matrix (corresponding to the move) same with the pass 
+    // Bottom left player is  (0, 0.5, 0) Matrix co ordinates are different (9, 0) Z co ordinate with the coloumn 
+    // Row = 9 - x co ordinate 
+
+
+    
 
 
     // Start is called before the first frame update
     void Start()
     {
-        //turnState = TurnState.START; 
+        
         pvp = true;
         CreateField();
         blockDist = Vector3.Distance(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
@@ -76,6 +108,7 @@ public class BoardMaker : MonoBehaviour
         clickedPlayer = null;
         clickedGround = null;
         currentPlayer = player1;
+        playerTurn = 1;
         movesRemaining = 2;
     }
 
@@ -353,15 +386,23 @@ public class BoardMaker : MonoBehaviour
     }
 
 
-    void SwitchPlayers()
+    public void SwitchPlayers()
     {
         if (currentPlayer == player1)
         {
             currentPlayer = player2;
+            playerTurn = 2;
+           // Move move = aiPlayer.GetMove(representation.Duplicate(), playerTurn);
+
+            //if (move != null)
+           // {
+            //    MakeMove(move);
+           // }
         }
         else
         {
             currentPlayer = player1;
+           // playerTurn = 1;
         }
 
         textRed.enabled = !textRed.IsActive();
@@ -477,7 +518,11 @@ public class BoardMaker : MonoBehaviour
     {
 
     }
-    
+    void MakeMove(Move move)
+    {
+
+        representation.MakeMove(move, playerTurn);
+    }
 
 }
 
