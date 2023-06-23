@@ -1082,6 +1082,12 @@ MonoBehaviour:
   halfwayDownGrass: {fileID: 3492694447846216150, guid: 4bf85276e9525ed48817641e10581fe3, type: 3}
   trylineRed: {fileID: 5817295063112175288, guid: a4f40a8cdd7a6f04f97aaf726d53706b, type: 3}
   trylineBlue: {fileID: 5817295063112175288, guid: 9f276f2358fb9ea47b2e730e38a7b2db, type: 3}
+  blocks:
+  - {fileID: 4908676315836038164, guid: 9f88d244f423bd84f9f1470c607f3965, type: 3}
+  - {fileID: 2080208357756111493, guid: a8db7898981eb61459bbfb88901732e9, type: 3}
+  - {fileID: 2000681024996004963, guid: eafc8e83385e3bb4981a09f0f83f8181, type: 3}
+  - {fileID: 3492694447846216150, guid: 4bf85276e9525ed48817641e10581fe3, type: 3}
+  - {fileID: 1278906401574009794, guid: 86a3da2d21006924f907085ea72c5604, type: 3}
   player1: {fileID: 5362713842602592366, guid: 40fcc7da7672214489c0b1fbff432c1f, type: 3}
   player2: {fileID: 5685635249678019436, guid: 4ed8d055444e6a34b9ce56bbdb3f5987, type: 3}
   numRows: 10

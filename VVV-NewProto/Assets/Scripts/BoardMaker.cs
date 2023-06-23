@@ -23,6 +23,8 @@ public class BoardMaker : MonoBehaviour
     public GameObject trylineRed;
     public GameObject trylineBlue;
 
+    public GameObject[] blocks;
+
     public GameObject player1;
     public GameObject player2;
 
@@ -333,53 +335,96 @@ public class BoardMaker : MonoBehaviour
 
     void CreateField()
     {
+        // OLD BOARD GENERATION
+
+        //for (int row = 0; row < numRows; row++)
+        //{
+        //    for (int col = 0; col < numColumns; col++)
+        //    {
+        //        if (row == 0)
+        //        {
+        //            Vector3 position = new Vector3(col, 0.5f, row);
+        //            Instantiate(trylineRed, position, Quaternion.identity);
+        //        }
+        //        else if (row == 9)
+        //        {
+        //            Vector3 position = new Vector3(col, 0.5f, row);
+        //            Instantiate(trylineBlue, position, Quaternion.identity);
+        //        }
+
+        //        else if (row == 4)
+        //        {
+        //            Vector3 position = new Vector3(col, 0.5f, row);
+        //            Vector3 rotation = new Vector3(0, 180, 0);
+        //            GameObject go = Instantiate(halfwayUpGrass, position, Quaternion.identity);
+        //            go.transform.Rotate(rotation);
+        //        }
+        //        else if (row == 5)
+        //        {
+        //            Vector3 position = new Vector3(col, 0.5f, row);
+        //            Instantiate(halfwayDownGrass, position, Quaternion.identity);
+        //        }
+        //        else
+        //        {
+        //            Vector3 position = new Vector3(col, 0.5f, row);
+        //            Instantiate(plainGrass, position, Quaternion.identity);
+        //        }
+
+        //        if (row == 1 && col == 0 || row == 1 && col == 2 || row == 1 && col == 4 || row == 1 && col == 6)
+        //        {
+        //            Vector3 position = new Vector3(col, 0.5f, row);
+        //            GameObject player1Instance = Instantiate(player1, position, Quaternion.identity);
+        //        }
+
+        //        if (row == 8 && col == 0 || row == 8 && col == 2 || row == 8 && col == 4 || row == 8 && col == 6)
+        //        {
+        //            Vector3 position = new Vector3(col, 0.5f, row);
+        //            GameObject player2Instance = Instantiate(player2, position, Quaternion.identity);
+        //        }
+        //    }
+
+        //}
+
+
+
+        // PROCEDURAL GENERATED MAP
         for (int row = 0; row < numRows; row++)
         {
             for (int col = 0; col < numColumns; col++)
             {
+                Vector3 position = new Vector3(col, 0.5f, row);
                 if (row == 0)
                 {
-                    Vector3 position = new Vector3(col, 0.5f, row);
                     Instantiate(trylineRed, position, Quaternion.identity);
                 }
                 else if (row == 9)
                 {
-                    Vector3 position = new Vector3(col, 0.5f, row);
+                    
                     Instantiate(trylineBlue, position, Quaternion.identity);
                 }
 
-                else if (row == 4)
-                {
-                    Vector3 position = new Vector3(col, 0.5f, row);
-                    Vector3 rotation = new Vector3(0, 180, 0);
-                    GameObject go = Instantiate(halfwayUpGrass, position, Quaternion.identity);
-                    go.transform.Rotate(rotation);
-                }
-                else if (row == 5)
-                {
-                    Vector3 position = new Vector3(col, 0.5f, row);
-                    Instantiate(halfwayDownGrass, position, Quaternion.identity);
-                }
                 else
                 {
-                    Vector3 position = new Vector3(col, 0.5f, row);
-                    Instantiate(plainGrass, position, Quaternion.identity);
+                    int block = UnityEngine.Random.Range(0, 5);
+                    int orientation = UnityEngine.Random.Range(0, 4);
+                    GameObject instantiatedObject = Instantiate(blocks[block], position, Quaternion.identity);
+                    instantiatedObject.transform.rotation = Quaternion.Euler(0f, 90f*orientation , 0f);
                 }
 
-                if (row == 1 && col == 0 || row == 1 && col == 2 || row == 1 && col == 4 || row == 1 && col == 6)
+                if((row == 1) && (col % 2 == 0))
                 {
-                    Vector3 position = new Vector3(col, 0.5f, row);
                     GameObject player1Instance = Instantiate(player1, position, Quaternion.identity);
                 }
-
-                if (row == 8 && col == 0 || row == 8 && col == 2 || row == 8 && col == 4 || row == 8 && col == 6)
+                if ((row == 8) && (col % 2 == 0))
                 {
-                    Vector3 position = new Vector3(col, 0.5f, row);
-                    GameObject player2Instance = Instantiate(player2, position, Quaternion.identity);
+                    GameObject player1Instance = Instantiate(player2, position, Quaternion.identity);
                 }
-            }
 
+            }
         }
+
+
+
 
         PlaceBall();
         
