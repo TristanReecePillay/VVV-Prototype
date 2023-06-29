@@ -23,7 +23,7 @@ public class Ball : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        boardMaker = GameObject.Find("BoardMaker").GetComponent<BoardMaker>();
+        boardMaker = GameObject.Find("BoardGenerator").GetComponent<BoardMaker>();
         transform.position = new Vector3(2, 0.5f, 1);
     }
 
